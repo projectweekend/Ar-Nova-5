@@ -12,6 +12,7 @@ Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 1234
 
 void setup(void)
 {
+    Serial.begin(9600);
     if(!tsl.begin()){
         Serial.print("Check I2C wiring for luminosity sensor");
         while(1);
@@ -25,12 +26,12 @@ void setup(void)
 void loop(void)
 {
     float luminosity = readLuminosity();
-
     if(motionDetected()){
         if(luminosity <= luminosityThreshold){
             sendLightEvent();
         }
     }
+    delay(200);
 }
 
 
