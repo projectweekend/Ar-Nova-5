@@ -43,12 +43,14 @@ void configureLuminositySensor(void)
 
 bool motionDetected(void)
 {
+    Serial.println("Motion detected");
     return digitalRead(pirPin);
 }
 
 
 void sendLightEvent(void)
 {
+    Serial.println("Sending light event");
     digitalWrite(lightEventPin, HIGH);
     delay(100);
     digitalWrite(lightEventPin, LOW);
@@ -59,5 +61,7 @@ float readLuminosity(void)
 {
     sensors_event_t event;
     tsl.getEvent(&event);
+    Serial.print(event.light);
+    Serial.println(" lux");
     return event.light;
 }
