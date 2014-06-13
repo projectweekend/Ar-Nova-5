@@ -17,7 +17,6 @@ void setup()
         while(1);
     }
     pinMode(pirPin, INPUT);
-    pinMode(motionEventPin, OUTPUT);
     pinMode(lightEventPin, OUTPUT);
     configureLuminositySensor();
 }
