@@ -3,9 +3,9 @@
 #include <Adafruit_TSL2561_U.h>
 
 #define pirPin 11
-#define lightEventPin 6
+#define lightsOnPin 6
 #define disableLightsPin 8
-#define enableLightsPin 9
+#define manualLightsPin 9
 #define luminosityThreshold 1
 
 
@@ -22,8 +22,8 @@ void setup(void)
     }
     pinMode(pirPin, INPUT);
     pinMode(disableLightsPin, INPUT_PULLUP);
-    pinMode(enableLightsPin, INPUT_PULLUP);
-    pinMode(lightEventPin, OUTPUT);
+    pinMode(manualLightsPin, INPUT_PULLUP);
+    pinMode(lightsOnPin, OUTPUT);
     configureLuminositySensor();
 }
 
@@ -58,9 +58,9 @@ bool motionDetected(void)
 
 void sendLightEvent(void)
 {
-    digitalWrite(lightEventPin, HIGH);
+    digitalWrite(lightsOnPin, HIGH);
     delay(100);
-    digitalWrite(lightEventPin, LOW);
+    digitalWrite(lightsOnPin, LOW);
 }
 
 
@@ -74,15 +74,32 @@ float readLuminosity(void)
 }
 
 
-void readButtons(void)
+void toggleDisableButton(void)
 {
     if(digitalRead(disableLightsPin) == LOW){
-        lightsDisabled = true;
-        Serial.println("Disable lights");
-        delay(500);
-    } else if(digitalRead(enableLightsPin) == LOW) {
-        lightsDisabled = false;
-        Serial.println("Enable lights");
-        delay(500);
+        if(lightsDisabled){
+            lightsDisabled = false;
+            Serial.println("Enalbe lights");
+        } else {
+            lightsDisabled = true;
+            Serial.println("Disable lights");
+        }
+        delay(250);
     }
+}
+
+
+void manualLightsButton(void)
+{
+    if(digitalRead(manualLightsPin) == LOW){
+        sendLightEvent();
+        delay(250);
+    }
+}
+
+
+void readButtons(void)
+{
+    toggleDisableButton();
+    manualLightsButton();
 }
