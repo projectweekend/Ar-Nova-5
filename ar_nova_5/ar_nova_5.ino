@@ -33,9 +33,7 @@ void loop(void)
     readButtons();
     float luminosity = readLuminosity();
     if(motionDetected()){
-        Serial.println("Motion detected");
         if(!lightsDisabled && luminosity <= luminosityThreshold){
-            Serial.println("Turning the lights on...");
             sendLightEvent();
         }
         delay(10000);
@@ -52,7 +50,11 @@ void configureLuminositySensor(void)
 
 bool motionDetected(void)
 {
-    return digitalRead(pirPin) == HIGH;
+    if(digitalRead(pirPin) == HIGH){
+        Serial.println("Motion detected");
+        return true;
+    }
+    return false;
 }
 
 
@@ -61,6 +63,7 @@ void sendLightEvent(void)
     digitalWrite(lightsOnPin, HIGH);
     delay(100);
     digitalWrite(lightsOnPin, LOW);
+    Serial.println("Turning the lights on...");
 }
 
 
