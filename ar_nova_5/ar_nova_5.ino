@@ -2,12 +2,15 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_TSL2561_U.h>
 
-#define pirPin 4
+#define pirPin 11
 #define lightEventPin 6
+#define disableLightsPin 8
+#define enableLightsPin 9
 #define luminosityThreshold 1
 
 
 Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 12345);
+bool lightsDisabled = false;
 
 
 void setup(void)
@@ -18,6 +21,8 @@ void setup(void)
         while(1);
     }
     pinMode(pirPin, INPUT);
+    pinMode(disableLightsPin, INPUT);
+    pinMode(enableLightsPin, INPUT);
     pinMode(lightEventPin, OUTPUT);
     configureLuminositySensor();
 }
@@ -25,16 +30,17 @@ void setup(void)
 
 void loop(void)
 {
+    readButtons();
     float luminosity = readLuminosity();
     if(motionDetected()){
         Serial.println("Motion detected");
-        if(luminosity <= luminosityThreshold){
-            Serial.println("Sending light event");
+        if(!lightsDisabled && luminosity <= luminosityThreshold){
+            Serial.println("Turning the lights on...");
             sendLightEvent();
         }
         delay(10000);
     } else {
-        delay(250);
+        delay(500);
     }
 }
 
@@ -68,3 +74,30 @@ float readLuminosity(void)
     Serial.println(" lux");
     return event.light;
 }
+
+
+void readDisableButton(void)
+{
+    if(digitalRead(disableLightsPin) && !lightsDisabled){
+        Serial.println("Disable lights");
+        lightsDisabled = true;
+    }
+}
+
+
+void readEnableButton(void)
+{
+    if(digitalRead(enableLightsPin) && lightsDisabled){
+        Serial.println("Enable lights");
+        lightsDisabled = false;
+    }
+}
+
+
+void readButtons(void)
+{
+    readDisableButton();
+    readEnableButton();
+}
+
+
