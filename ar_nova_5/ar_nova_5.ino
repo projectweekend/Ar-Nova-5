@@ -27,11 +27,15 @@ void loop(void)
 {
     float luminosity = readLuminosity();
     if(motionDetected()){
+        Serial.println("Motion detected");
         if(luminosity <= luminosityThreshold){
+            Serial.println("Sending light event");
             sendLightEvent();
         }
+        delay(10000);
+    } else {
+        delay(250);
     }
-    delay(200);
 }
 
 
@@ -44,14 +48,12 @@ void configureLuminositySensor(void)
 
 bool motionDetected(void)
 {
-    Serial.println("Motion detected");
-    return digitalRead(pirPin);
+    return digitalRead(pirPin) == HIGH;
 }
 
 
 void sendLightEvent(void)
 {
-    Serial.println("Sending light event");
     digitalWrite(lightEventPin, HIGH);
     delay(100);
     digitalWrite(lightEventPin, LOW);
