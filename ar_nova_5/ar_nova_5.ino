@@ -39,8 +39,6 @@ void loop(void)
             sendLightEvent();
         }
         delay(10000);
-    } else {
-        delay(250);
     }
 }
 
@@ -76,28 +74,13 @@ float readLuminosity(void)
 }
 
 
-void readDisableButton(void)
-{
-    if(digitalRead(disableLightsPin) == LOW && !lightsDisabled){
-        Serial.println("Disable lights");
-        lightsDisabled = true;
-    }
-}
-
-
-void readEnableButton(void)
-{
-    if(digitalRead(enableLightsPin) == LOW && lightsDisabled){
-        Serial.println("Enable lights");
-        lightsDisabled = false;
-    }
-}
-
-
 void readButtons(void)
 {
-    readDisableButton();
-    readEnableButton();
+    if(digitalRead(disableLightsPin) == LOW){
+        lightsDisabled = true;
+        Serial.println("Disable lights");
+    } else if(digitalRead(enableLightsPin) == LOW) {
+        lightsDisabled = false;
+        Serial.println("Enable lights");
+    }
 }
-
-
