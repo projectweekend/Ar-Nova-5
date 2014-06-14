@@ -79,8 +79,10 @@ void readButtons(void)
     if(digitalRead(disableLightsPin) == LOW){
         lightsDisabled = true;
         Serial.println("Disable lights");
+        delay(500);
     } else if(digitalRead(enableLightsPin) == LOW) {
         lightsDisabled = false;
         Serial.println("Enable lights");
+        delay(500);
     }
 }
