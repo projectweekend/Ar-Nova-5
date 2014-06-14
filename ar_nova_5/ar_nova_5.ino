@@ -21,8 +21,8 @@ void setup(void)
         while(1);
     }
     pinMode(pirPin, INPUT);
-    pinMode(disableLightsPin, INPUT);
-    pinMode(enableLightsPin, INPUT);
+    pinMode(disableLightsPin, INPUT_PULLUP);
+    pinMode(enableLightsPin, INPUT_PULLUP);
     pinMode(lightEventPin, OUTPUT);
     configureLuminositySensor();
 }
@@ -40,7 +40,7 @@ void loop(void)
         }
         delay(10000);
     } else {
-        delay(500);
+        delay(250);
     }
 }
 
@@ -78,7 +78,7 @@ float readLuminosity(void)
 
 void readDisableButton(void)
 {
-    if(digitalRead(disableLightsPin) && !lightsDisabled){
+    if(digitalRead(disableLightsPin) == LOW && !lightsDisabled){
         Serial.println("Disable lights");
         lightsDisabled = true;
     }
@@ -87,7 +87,7 @@ void readDisableButton(void)
 
 void readEnableButton(void)
 {
-    if(digitalRead(enableLightsPin) && lightsDisabled){
+    if(digitalRead(enableLightsPin) == LOW && lightsDisabled){
         Serial.println("Enable lights");
         lightsDisabled = false;
     }
