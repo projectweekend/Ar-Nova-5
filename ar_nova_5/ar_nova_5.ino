@@ -11,6 +11,7 @@
 
 Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 12345);
 bool lightsDisabled = false;
+bool motionRecentlyDetected = false;
 
 
 void setup(void)
@@ -32,8 +33,13 @@ void loop(void)
 {
     if(!lightsDisabled){
         float luminosity = readLuminosity();
-        if(motionDetected() && luminosity <= luminosityThreshold){
-            sendLightEvent();
+        if(readMotion() && !motionRecentlyDetected){
+            motionRecentlyDetected = true;
+            if(luminosity <= luminosityThreshold){
+                sendLightEvent();
+            }
+        } else {
+            motionRecentlyDetected = false;
         }
     }
     readButtons();
@@ -47,22 +53,22 @@ void configureLuminositySensor(void)
 }
 
 
-bool motionDetected(void)
-{
-    if(digitalRead(pirPin) == HIGH){
-        Serial.println("Motion detected");
-        return true;
-    }
-    return false;
-}
-
-
 void sendLightEvent(void)
 {
     digitalWrite(lightsOnPin, HIGH);
     delay(100);
     digitalWrite(lightsOnPin, LOW);
     Serial.println("Turning the lights on...");
+}
+
+
+bool readMotion(void)
+{
+    if(digitalRead(pirPin) == HIGH){
+        Serial.println("Motion detected");
+        return true;
+    }
+    return false;
 }
 
 
