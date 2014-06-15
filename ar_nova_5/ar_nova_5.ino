@@ -30,14 +30,13 @@ void setup(void)
 
 void loop(void)
 {
-    readButtons();
-    float luminosity = readLuminosity();
-    if(motionDetected()){
-        if(!lightsDisabled && luminosity <= luminosityThreshold){
+    if(!lightsDisabled){
+        float luminosity = readLuminosity();
+        if(motionDetected() && luminosity <= luminosityThreshold){
             sendLightEvent();
         }
-        delay(10000);
     }
+    readButtons();
 }
 
 
