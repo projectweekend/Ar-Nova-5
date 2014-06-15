@@ -87,6 +87,7 @@ void toggleDisableButton(void)
             lightsDisabled = true;
             Serial.println("Disable lights");
         }
+        delay(250);
     }
 }
 
@@ -95,6 +96,7 @@ void manualLightsButton(void)
 {
     if(digitalRead(manualLightsPin) == LOW){
         sendLightEvent();
+        delay(250);
     }
 }
 
