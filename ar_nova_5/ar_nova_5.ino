@@ -11,7 +11,6 @@
 
 Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 12345);
 bool lightsDisabled = false;
-bool motionRecentlyDetected = false;
 
 
 void setup(void)
@@ -33,13 +32,9 @@ void loop(void)
 {
     if(!lightsDisabled){
         float luminosity = readLuminosity();
-        if(readMotion() && !motionRecentlyDetected){
-            motionRecentlyDetected = true;
-            if(luminosity <= luminosityThreshold){
-                sendLightEvent();
-            }
-        } else {
-            motionRecentlyDetected = false;
+        bool motion = readMotion();
+        if(motion && luminosity <= luminosityThreshold){
+            sendLightEvent();
         }
     }
     readButtons();
